@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,6 +9,14 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { ExternalLink, Plus, EditIcon, Trash2 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { Head } from '@inertiajs/react';
@@ -32,9 +41,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Index({ categories }: Props) {
-  const handleDelete = (id: number) => {
-    if (confirm('Are you sure you want to delete this category?')) {
-      router.delete(`/categories/${id}`);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
+
+  const confirmDelete = () => {
+    if (categoryToDelete) {
+      router.delete(`/categories/${categoryToDelete.id}`, {
+        onSuccess: () => setCategoryToDelete(null),
+      });
     }
   };
 
@@ -97,7 +110,7 @@ export default function Index({ categories }: Props) {
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => handleDelete(category.id)}
+                    onClick={() => setCategoryToDelete(category)}
                     title="Delete"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -123,6 +136,33 @@ export default function Index({ categories }: Props) {
             </CardContent>
           </Card>
         )}
+
+        <Dialog open={!!categoryToDelete} onOpenChange={(open) => !open && setCategoryToDelete(null)}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete category</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete &quot;{categoryToDelete?.name}&quot;? This action cannot be undone.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-2 sm:gap-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setCategoryToDelete(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={confirmDelete}
+              >
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </AppLayout>
   );
