@@ -30,9 +30,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('field-groups/{fieldGroup}/submissions/{submission}', [\App\Http\Controllers\FormSubmissionController::class, 'destroy'])->name('field-groups.submissions.destroy');
     Route::get('field-groups/{fieldGroup}/submissions/export', [\App\Http\Controllers\FormSubmissionController::class, 'export'])->name('field-groups.submissions.export');
     
-    // Example Model Routes - Categories
+    // Example Model Routes - Categories (full CRUD)
     Route::get('categories', [\App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
+    Route::get('categories/create', [\App\Http\Controllers\CategoryController::class, 'create'])->name('categories.create');
+    Route::post('categories', [\App\Http\Controllers\CategoryController::class, 'store'])->name('categories.store');
     Route::get('categories/{category:slug}', [\App\Http\Controllers\CategoryController::class, 'show'])->name('categories.show');
+    Route::get('categories/{category}/edit', [\App\Http\Controllers\CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('categories/{category}', [\App\Http\Controllers\CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('categories/{category}', [\App\Http\Controllers\CategoryController::class, 'destroy'])->name('categories.destroy');
     
     // Example Model Routes - Brands
     Route::get('brands', [\App\Http\Controllers\BrandController::class, 'index'])->name('brands.index');

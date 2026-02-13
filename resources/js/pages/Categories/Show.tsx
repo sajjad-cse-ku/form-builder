@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ExternalLink, ArrowLeft } from 'lucide-react';
+import { ExternalLink, ArrowLeft, EditIcon } from 'lucide-react';
 import { Head, Link } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -15,7 +15,7 @@ interface Category {
   id: number;
   name: string;
   slug: string;
-  description: string;
+  description: string | null;
   feedback_url: string;
 }
 
@@ -33,19 +33,27 @@ export default function Show({ category }: Props) {
     <AppLayout breadcrumbs={breadcrumbs(category)}>
       <Head title={category.name} />
       <div className="container mx-auto py-8">
-      <Link href="/categories">
-        <Button variant="ghost" size="sm" className="mb-4">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Categories
-        </Button>
-      </Link>
+      <div className="flex gap-2 mb-4">
+        <Link href="/categories">
+          <Button variant="ghost" size="sm">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Categories
+          </Button>
+        </Link>
+        <Link href={`/categories/${category.id}/edit`}>
+          <Button variant="outline" size="sm">
+            <EditIcon className="mr-2 h-4 w-4" />
+            Edit Category
+          </Button>
+        </Link>
+      </div>
 
       <div className="max-w-4xl">
         <Card>
           <CardHeader>
             <CardTitle className="text-3xl">{category.name}</CardTitle>
             <CardDescription className="text-lg">
-              {category.description}
+              {category.description || 'No description'}
             </CardDescription>
           </CardHeader>
           <CardContent>
